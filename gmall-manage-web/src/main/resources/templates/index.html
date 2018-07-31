@@ -57,12 +57,16 @@
 
         <script language="JavaScript">
             function addAttrTabs() {
-                $("#tt").tabs('add',{
-                    title:'属性信息管理',
-                    href:'attrListPage',
-                    closable:true,
-
-                });
+                var b = $("#tt").tabs("exists","属性信息管理");
+                if(!b) {
+                    $("#tt").tabs('add',{
+                        title:'属性信息管理',
+                        href:'attrListPage',
+                        closable:true
+                    });
+                }else {
+                    $("#tt").tabs("select","属性信息管理");
+                }
             }
         </script>
 </body>
