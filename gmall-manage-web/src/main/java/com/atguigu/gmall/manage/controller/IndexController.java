@@ -25,6 +25,6 @@ public class IndexController {
      */
     @RequestMapping("/attrListPage")
     public String attrListPage() {
-        return "attrList";
+        return "attrListPage";
     }
 }

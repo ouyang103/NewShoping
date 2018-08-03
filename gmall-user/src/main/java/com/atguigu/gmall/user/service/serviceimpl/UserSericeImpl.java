@@ -1,4 +1,4 @@
-package com.atguigu.gmall.user.serviceimpl;
+package com.atguigu.gmall.user.service.serviceimpl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.bean.UserInfo;
