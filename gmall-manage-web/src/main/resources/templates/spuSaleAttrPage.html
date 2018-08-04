@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工具栏增删改</title>
+</head>
+<body>
+    <div id="spu_sale_dd" class="easyui-dialog" title="属性编辑" style="width:400px;height:350px;"
+         data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#bb'">
+        <label>销售属性:</label>
+        <input id="saleValeName" class="easyui-combobox" data-options="valueField:'id',textField:'name',
+                                        url:'getSaleValeName'"/>
+        <br/><br/>
+        <input  id="attrId" name="attrId" type="hidden"  />
+        <table id="dg_add_sale_av" class="easyui-datagrid" title="属性值列表"></table>
+    </div>
+
+    <div id="bb">
+        <a href="#" class="easyui-linkbutton" onclick="saveSpuSaleVale()">保存</a>
+        <a href="#" class="easyui-linkbutton">关闭</a>
+    </div>
+
+    <script language="JavaScript">
+        //初始化添加销售属性值
+        function initSpuAddImgDatagrid() {
+            d = $('#dg_add_sale_av').datagrid({
+                columns:[[
+                    {field:'saleAttrId',title:'销售属性值id',width:60},
+                    {field:'saleAttrValeName',title:'销售属性值名称',width:310,
+
+                        //双击可输入条件
+                        //editor:编辑，tyrpe:类型,options:条件，required：必须的
+                        editor:{
+                            type: 'validatebox', options: { required: true}
+                        }
+                    },
+                ]],
+                toolbar: [{
+                    iconCls: 'icon-add',
+                    text:'添加',
+                    handler: function(){
+                        $('#dg_add_sale_av').datagrid('appendRow',{
+                            id: "",
+                            valueName: ""
+                        });
+                    }
+                },'-',{
+                    iconCls: 'icon-remove',
+                    text:'删除',
+                    handler: function(){
+                        //选中当前的行
+                        var da_av = $("#dg_add_sale_av").datagrid("getSelected");
+
+                        //获取当前被选择行的id
+                        var da_av_id = $("#dg_add_sale_av").datagrid('getRowIndex',da_av);
+                        if(da_av_id != -1) {
+                            //根据行的id删除行
+                            $("#dg_add_sale_av").datagrid('deleteRow',da_av_id);
+                        } else {
+                            $.messager.show({
+                                title:'系统提示',
+                                msg:'请选择你要删除的行',
+                                showType:'slide'
+                            });
+                        }
+
+                    }
+                }],
+                //双击可输入的条件
+                onDblClickRow: function (rowIndex, rowData) {
+                    //双击开启编辑行
+                    d.datagrid("beginEdit", rowIndex);
+                    //设定当失去焦点时,退出编辑状态
+                    var valueName = rowData.valueName;
+                    $("input.datagrid-editable-input").val(valueName).bind("blur",function(evt){
+                        d.datagrid('endEdit',rowIndex);
+                    });
+                }
+
+            });
+        }
+
+        function saveSpuSaleVale() {
+
+            var saleValeNameId = $("#saleValeName").combobox("getValue");
+
+            var saleValeName = $("#saleValeName").combobox("getText");
+
+            //获取用户所有选择的行
+            var saleValeDate = $("#dg_add_sale_av").datagrid("getData");
+
+            $("#dg_spu_sale_arr").datagrid('appendRow',{
+                saleAttrId:saleValeNameId,
+                saleAttrName:saleValeName,
+                spuSaleAttrValueJson:saleValeDate
+            })
+
+            //关闭窗口
+            $("#spu_sale_dd").dialog("close");
+        }
+    </script>
+</body>
+</html>

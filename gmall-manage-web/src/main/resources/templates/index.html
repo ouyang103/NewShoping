@@ -16,17 +16,17 @@
         <div data-options="region:'west',split:true,title:'West'" style="width:200px;padding:10px;">
 
             <div class="easyui-accordion" style="width:180px;">
-                <div title="About" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                <div title="商品属性" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
                     <ul>
                         <li>
-                            <a href="javascript:addAttrTabs()">属性信息管理
+                            <a href="javascript:addTabs('属性信息管理','attrListPage')">属性信息管理</a>
                         </li>
                     </ul>
                 </div>
-                <div title="Help" data-options="iconCls:'icon-help'" style="padding:10px;">
+                <div title="商品spu属性管理" data-options="iconCls:'icon-help'" style="padding:10px;">
                     <ul>
                         <li>
-                            商品spu管理
+                            <a href="javascript:addTabs('商品spu管理','attrSpuPage')">商品spu管理</a>
                         </li>
                     </ul>
                 </div>
@@ -51,21 +51,19 @@
             <div id="tt" class="easyui-tabs" style="width:100%;height:100%;">
 
             </div>
-
-
         </div>
 
         <script language="JavaScript">
-            function addAttrTabs() {
-                var b = $("#tt").tabs("exists","属性信息管理");
+            function addTabs(title,href) {
+                var b = $("#tt").tabs("exists",title);
                 if(!b) {
                     $("#tt").tabs('add',{
-                        title:'属性信息管理',
-                        href:'attrListPage',
+                        title:title,
+                        href:href,
                         closable:true
                     });
                 }else {
-                    $("#tt").tabs("select","属性信息管理");
+                    $("#tt").tabs("select",title);
                 }
             }
         </script>
