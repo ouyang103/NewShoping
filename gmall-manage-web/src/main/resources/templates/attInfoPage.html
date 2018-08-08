@@ -26,8 +26,10 @@
             var ctg3Id = $("#ctg3ForAttrList").combobox("getValue");
             //获取用户输入的属性名称
             var attrName = $("#attrName").val();
+            alert(attrName);
 
-            var attrInfos = $("#dg").datagrid("getSelected");
+            var attrInfos = $("#dg_av").datagrid("getRows");
+            alert(attrInfos);
             //获取用户输入的属性值名称
             var attrInfo = {};
             //var attrId = attrInfos.id;
@@ -113,22 +115,12 @@
                 //属性名做回显
                 $("#attrName").textbox("setText",attrInfo.attrName);
                 //属性值的回显
+                alert(attrInfo.id);
 
-                var attValue = {};
-
-                attValue["attrId"] = attrInfo.id;
-
-                $.get('getAttrValueList',attValue,function (result) {
-                    if(result.success) {
-                        var list = result.data;
-                        $(list).each(function (i,e) {
-                            $('#dg_av').datagrid('appendRow',{
-                                id: e.id,
-                                valueName: e.valueName
-                            });
-                        })
-                    }
+                $('#dg_av').datagrid({
+                    url:"getAttrValueList?attrId="+attrInfo.id
                 });
+
 
 
             }

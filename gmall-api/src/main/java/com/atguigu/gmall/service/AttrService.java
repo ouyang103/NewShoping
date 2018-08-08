@@ -22,4 +22,6 @@ public interface AttrService {
     void deleteArrByID(String arrId);
 
     List<BaseAttrValue> getAttrValueList(String attrId);
+
+    List<AttrInfo> getAttrListByCtg3Id(String catalog3Id);
 }

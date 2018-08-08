@@ -119,4 +119,22 @@ public class AttrServiceImpl implements AttrService {
         return baseAttrValueMapper.select(baseAttrValue);
     }
 
+    @Override
+    public List<AttrInfo> getAttrListByCtg3Id(String catalog3Id) {
+        AttrInfo attrInfo = new AttrInfo();
+        attrInfo.setCatalog3Id(catalog3Id);
+        List<AttrInfo> attrInfoSelect = attrInfoMapper.select(attrInfo);
+
+        for (AttrInfo info : attrInfoSelect) {
+            String attrInfoId = info.getId();
+            BaseAttrValue baseAttrValue = new BaseAttrValue();
+            baseAttrValue.setAttrId(attrInfoId);
+            List<BaseAttrValue> select = baseAttrValueMapper.select(baseAttrValue);
+
+            info.setAttrValues(select);
+        }
+
+        return attrInfoSelect;
+    }
+
 }

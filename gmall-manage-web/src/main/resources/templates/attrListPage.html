@@ -25,6 +25,8 @@
             一级分类:<input id="ctg1ForAttrList'" class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'getCatalog1',
 
                          onSelect: function(rec){
+                            $('#ctg2ForAttrList').combobox('clear');
+                            $('#ctg3ForAttrList').combobox('clear');
                             var url = 'getCatalog2?getCatalogId='+rec.id;
                             $('#ctg2ForAttrList').combobox('reload', url);
                          }
@@ -33,6 +35,7 @@
             二级分类:<input id="ctg2ForAttrList" class="easyui-combobox" data-options="valueField:'id',textField:'name',
 
                         onSelect: function(rec){
+                            $('#ctg3ForAttrList').combobox('clear');
                             var url = 'getCatalog3?getCatalogId='+rec.id;
                             $('#ctg3ForAttrList').combobox('reload', url);
                          }

@@ -1,8 +1,8 @@
 package com.atguigu.gmall.service;
 
-import com.atguigu.gmall.bean.BaseSaleAttr;
-import com.atguigu.gmall.bean.SpuInfo;
+import com.atguigu.gmall.bean.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,4 +15,12 @@ public interface SpuInfoService {
     List<BaseSaleAttr> getSaleValeName();
 
     void saveSpu(SpuInfo spuInfo);
+
+    List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId);
+
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(HashMap<String,String> stringStringHashMap);
+
+    List<SpuImage> getSpuImageListBySpuId(String spuId);
+
+    List<SkuInfo> getSkuSaleAttrValueListBySpu(String spuId);
 }

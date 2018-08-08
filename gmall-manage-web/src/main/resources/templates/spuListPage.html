@@ -21,13 +21,15 @@
         <a href="javascript:addSpuInfoPage();"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:updateInfoPage();"  class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">编辑</a>
         <a id="deleteRowAttr" href="javascript:deleteInfoPage();"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
-        <a href="#"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">增加sku</a>
-        <a href="#"  class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">sku列表</a>
+        <a href="javascript:addSkuInfoPage();"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">增加sku</a>
+        <a href="javascript:selectSkuInfoPage();"  class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">sku列表</a>
         <br><br>
         <div>
             一级分类:<input id="ctg1ForAttrList'" class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'getCatalog1',
 
                          onSelect: function(rec){
+                             $('#ctg2ForAttrList').combobox('clear');
+                             $('#ctg3ForAttrList').combobox('clear');
                             var url = 'getCatalog2?getCatalogId='+rec.id;
                             $('#ctg2ForAttrList').combobox('reload', url);
                          }
@@ -36,6 +38,7 @@
             二级分类:<input id="ctg2ForAttrList" class="easyui-combobox" data-options="valueField:'id',textField:'name',
 
                         onSelect: function(rec){
+                            $('#ctg3ForAttrList').combobox('clear');
                             var url = 'getCatalog3?getCatalogId='+rec.id;
                             $('#ctg3ForAttrList').combobox('reload', url);
                          }
@@ -50,6 +53,10 @@
 
     <!--增删改引入-->
     <div th:include="spuInfoPage"></div>
+
+    <div th:include="skuListPage"></div>
+
+    <div th:include="skuInfoPage"></div>
 
     <script language="JavaScript">
 
@@ -96,6 +103,44 @@
             }
         }
 
+
+        //sku列表
+        function selectSkuInfoPage() {
+            var spuInfo = $("#dg").datagrid("getSelected");
+            if(spuInfo) {
+
+                $("#skulist_dlg").dialog("open");
+                //初始化
+                //弹出sku界面
+                initSkuInfoDatagrid(spuInfo);
+            } else {
+                $.messager.show({
+                    title:'系统提示',
+                    msg:'请在选择三级分类后进行sku列表操作',
+                    showType:'slide'
+                });
+            }
+        }
+
+        //添加sku属性
+        function addSkuInfoPage() {
+
+            //获取选中的行的spu
+            var spuInfo = $("#dg").datagrid("getSelected");
+            if(spuInfo) {
+                //打开窗口
+                $("#sku_dlg").dialog("open");
+                //初始化
+                initSkuInfoDlg(spuInfo);
+            } else {
+                $.messager.show({
+                    title:'系统提示',
+                    msg:'请在选择三级分类后进行sku添加操作',
+                    showType:'slide'
+                });
+            }
+        }
+        
     </script>
 </body>
 </html>

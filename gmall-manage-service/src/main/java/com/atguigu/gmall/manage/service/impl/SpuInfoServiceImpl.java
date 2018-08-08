@@ -1,17 +1,13 @@
 package com.atguigu.gmall.manage.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.atguigu.gmall.bean.BaseSaleAttr;
-import com.atguigu.gmall.bean.SpuInfo;
-import com.atguigu.gmall.bean.SpuSaleAttr;
-import com.atguigu.gmall.bean.SpuSaleAttrValue;
-import com.atguigu.gmall.manage.mapper.BaseSaleAttrMapper;
-import com.atguigu.gmall.manage.mapper.SpuInfoMapper;
-import com.atguigu.gmall.manage.mapper.SpuSaleAttrMapper;
-import com.atguigu.gmall.manage.mapper.SpuSaleAttrValueMapper;
+import com.atguigu.gmall.bean.*;
+import com.atguigu.gmall.manage.mapper.*;
 import com.atguigu.gmall.service.SpuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +15,7 @@ import java.util.List;
  * @create 2018-08-03 16:33
  */
 @Service
+@Transactional
 public class SpuInfoServiceImpl implements SpuInfoService {
 
     @Autowired
@@ -32,6 +29,9 @@ public class SpuInfoServiceImpl implements SpuInfoService {
 
     @Autowired
     SpuSaleAttrValueMapper spuSaleAttrValueMapper;
+
+    @Autowired
+    SpuImageMapper spuImageMapper;
 
     @Override
     public List<SpuInfo> getSpuListData(String ctg3Id) {
@@ -48,22 +48,29 @@ public class SpuInfoServiceImpl implements SpuInfoService {
     @Override
     public void saveSpu(SpuInfo spuInfo) {
         if(spuInfo.getId() ==  null) {
-            spuInfoMapper.insert(spuInfo);
+            spuInfoMapper.insertSelective(spuInfo);
 
-            //从数据库中查询出商品的spu
-            SpuInfo spuInfo1 = spuInfoMapper.selectOne(spuInfo);
+            String spuId = spuInfo.getId();
+
+            //保存图片信息
+            List<SpuImage> spuImageList = spuInfo.getSpuImageList();
+
+            for (SpuImage img:spuImageList) {
+                img.setSpuId(spuId);
+                spuImageMapper.insert(img);
+            }
 
             //保存销售属性
             List<SpuSaleAttr> spuSaleAttrList = spuInfo.getSpuSaleAttrList();
 
             for (SpuSaleAttr spuSaleAttr:spuSaleAttrList) {
-                spuSaleAttr.setSpuId(spuInfo1.getId());
+                spuSaleAttr.setSpuId(spuId);
                 spuSaleAttrMapper.insert(spuSaleAttr);
 
                 //保存销售属性值
                 List<SpuSaleAttrValue> spuSaleAttrValueList = spuSaleAttr.getSpuSaleAttrValueList();
                 for (SpuSaleAttrValue spuSaleAttrvalue:spuSaleAttrValueList) {
-                    spuSaleAttrvalue.setSpuId(spuInfo1.getId());
+                    spuSaleAttrvalue.setSpuId(spuId);
                     spuSaleAttrValueMapper.insert(spuSaleAttrvalue);
                 }
             }
@@ -71,5 +78,46 @@ public class SpuInfoServiceImpl implements SpuInfoService {
 
 
         }
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId) {
+
+        SpuSaleAttr spuSaleAttr = new SpuSaleAttr();
+
+        spuSaleAttr.setSpuId(spuId);
+
+        List<SpuSaleAttr> spuSaleAttrSelect = spuSaleAttrMapper.select(spuSaleAttr);
+
+        for (SpuSaleAttr saleAttr : spuSaleAttrSelect) {
+            SpuSaleAttrValue spuSaleAttrValue = new SpuSaleAttrValue();
+            spuSaleAttrValue.setSpuId(saleAttr.getSpuId());
+            spuSaleAttrValue.setSaleAttrId(saleAttr.getSaleAttrId());
+
+            List<SpuSaleAttrValue> select = spuSaleAttrValueMapper.select(spuSaleAttrValue);
+
+            saleAttr.setSpuSaleAttrValueList(select);
+        }
+        return spuSaleAttrSelect;
+    }
+
+    @Override
+    public List<SpuImage> getSpuImageListBySpuId(String spuId) {
+
+        SpuImage spuImage = new SpuImage();
+
+        spuImage.setSpuId(spuId);
+
+        return spuImageMapper.select(spuImage);
+    }
+
+    @Override
+    public List<SkuInfo> getSkuSaleAttrValueListBySpu(String spuId) {
+        return spuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(HashMap<String, String> stringStringHashMap) {
+        return spuSaleAttrValueMapper.selectSpuSaleAttrListCheckBySku(stringStringHashMap);
     }
 }

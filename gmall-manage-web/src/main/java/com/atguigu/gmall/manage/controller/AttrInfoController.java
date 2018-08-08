@@ -21,24 +21,19 @@ public class AttrInfoController extends BaseController {
     @Reference
     AttrService attrService;
 
+    @RequestMapping("getAttrListByCtg3Id")
+    @ResponseBody
+    public List<AttrInfo> getAttrListByCtg3Id(String catalog3Id) {
+        return attrService.getAttrListByCtg3Id(catalog3Id);
+    }
+
     @RequestMapping("getAttrValueList")
     @ResponseBody
-    public Object getAttrValueList(String attrId) {
-        start();
-
-        try {
+    public List<BaseAttrValue> getAttrValueList(String attrId) {
 
             List<BaseAttrValue> list = attrService.getAttrValueList(attrId);
 
-            data(list);
-
-            success(true);
-        }catch (Exception e) {
-            success(false);
-            e.printStackTrace();
-        }
-
-        return end();
+        return list;
     }
 
     /**
